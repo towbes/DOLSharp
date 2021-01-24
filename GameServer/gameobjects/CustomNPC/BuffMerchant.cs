@@ -861,7 +861,8 @@ namespace DOL.GS
 			TradeItems = new MerchantTradeItems("BuffTokens");
 			if (!base.Interact(player)) return false;
 			TurnTo(player, 10000);
-			player.Out.SendMessage("Greetings, " + player.Name + ". The King has instructed me to strengthen you so that you may defend the lands with valor. Simply hand me the token for the enhancement you desire, and I will empower you accordingly. Do you wish to purchase tokens with [Gold] or [Bounty Points]?", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+			player.Out.SendMessage("Greetings, " + player.Name + ". Would you like [Full Buffs]? Do you wish to purchase tokens with [Gold] or [Bounty Points]?", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+			//player.Out.SendMessage("Greetings, " + player.Name + ". The King has instructed me to strengthen you so that you may defend the lands with valor. Simply hand me the token for the enhancement you desire, and I will empower you accordingly. Do you wish to purchase tokens with [Gold] or [Bounty Points]?", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 			isBounty = false;
 			SendMerchantWindow(player);
 			return true;
@@ -876,6 +877,37 @@ namespace DOL.GS
 
 			switch (str)
 			{
+				//Add full buffs when player says "Full Buffs"
+				case "Full Buffs":
+					{
+						TurnTo(player, 10000);
+						if (player.CharacterClass.ClassType == eClassType.ListCaster)
+						{
+							BuffPlayer(player, casterMerchBaseAFBuff, MerchBaseSpellLine);
+							BuffPlayer(player, casterMerchStrBuff, MerchBaseSpellLine);
+							BuffPlayer(player, casterMerchDexBuff, MerchBaseSpellLine);
+							BuffPlayer(player, casterMerchConBuff, MerchBaseSpellLine);
+							BuffPlayer(player, casterMerchSpecAFBuff, MerchSpecSpellLine);
+							BuffPlayer(player, casterMerchStrConBuff, MerchSpecSpellLine);
+							BuffPlayer(player, casterMerchDexQuiBuff, MerchSpecSpellLine);
+							BuffPlayer(player, casterMerchAcuityBuff, MerchSpecSpellLine);
+							BuffPlayer(player, MerchHasteBuff, MerchSpecSpellLine);
+						}
+						else
+						{
+							BuffPlayer(player, MerchBaseAFBuff, MerchBaseSpellLine);
+							BuffPlayer(player, MerchStrBuff, MerchBaseSpellLine);
+							BuffPlayer(player, MerchDexBuff, MerchBaseSpellLine);
+							BuffPlayer(player, MerchConBuff, MerchBaseSpellLine);
+							BuffPlayer(player, MerchSpecAFBuff, MerchSpecSpellLine);
+							BuffPlayer(player, MerchStrConBuff, MerchSpecSpellLine);
+							BuffPlayer(player, MerchDexQuiBuff, MerchSpecSpellLine);
+							BuffPlayer(player, MerchAcuityBuff, MerchSpecSpellLine);
+							BuffPlayer(player, MerchHasteBuff, MerchSpecSpellLine);
+						}
+					}
+					player.Out.SendMessage("Fight well, " + player.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					break;
 				case "Gold":
 					{
 						TurnTo(player, 10000);

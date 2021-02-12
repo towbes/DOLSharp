@@ -85,13 +85,13 @@ namespace DOL.GS
 		public void BuffPlayer(GamePlayer player, Spell spell, SpellLine spellLine)
 		{
 			if (m_buffs == null) m_buffs = new Queue();
-			
+
 			m_buffs.Enqueue(new Container(spell, spellLine, player));
 
 			//don't forget his pet !
-			if(BUFFS_PLAYER_PET && player.ControlledBrain != null) 
+			if (BUFFS_PLAYER_PET && player.ControlledBrain != null)
 			{
-				if(player.ControlledBrain.Body != null) 
+				if (player.ControlledBrain.Body != null)
 				{
 					m_buffs.Enqueue(new Container(spell, spellLine, player.ControlledBrain.Body));
 				}
@@ -151,7 +151,7 @@ namespace DOL.GS
 			{
 				if (m_MerchOtherSpellLine == null)
 					m_MerchOtherSpellLine = new SpellLine("MerchOtherSpellLine", "BuffMerch Spells", "unknown", true);
-				
+
 				return m_MerchOtherSpellLine;
 			}
 		}
@@ -686,7 +686,7 @@ namespace DOL.GS
 					spell.Target = "Realm";
 					spell.Type = "CombatSpeedBuff";
 					spell.EffectGroup = 100;
-					
+
 					m_haste = new Spell(spell, 50);
 				}
 				return m_haste;
@@ -850,19 +850,18 @@ namespace DOL.GS
 
 		public override eQuestIndicator GetQuestIndicator(GamePlayer player)
 		{
-			return eQuestIndicator.Lore ;
+			return eQuestIndicator.Lore;
 		}
 		#endregion
 
 		private bool isBounty;
-		
+
 		public override bool Interact(GamePlayer player)
 		{
 			TradeItems = new MerchantTradeItems("BuffTokens");
 			if (!base.Interact(player)) return false;
 			TurnTo(player, 10000);
-			player.Out.SendMessage("Greetings, " + player.Name + ". Would you like [Full Buffs]? Do you wish to purchase tokens with [Gold] or [Bounty Points]?", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-			//player.Out.SendMessage("Greetings, " + player.Name + ". The King has instructed me to strengthen you so that you may defend the lands with valor. Simply hand me the token for the enhancement you desire, and I will empower you accordingly. Do you wish to purchase tokens with [Gold] or [Bounty Points]?", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+			player.Out.SendMessage("Greetings, " + player.Name + ". The King has instructed me to strengthen you so that you may defend the lands with valor. Simply hand me the token for the enhancement you desire, and I will empower you accordingly. Do you wish to purchase tokens with [Gold] or [Bounty Points]?", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 			isBounty = false;
 			SendMerchantWindow(player);
 			return true;
@@ -877,37 +876,6 @@ namespace DOL.GS
 
 			switch (str)
 			{
-				//Add full buffs when player says "Full Buffs"
-				case "Full Buffs":
-					{
-						TurnTo(player, 10000);
-						if (player.CharacterClass.ClassType == eClassType.ListCaster)
-						{
-							BuffPlayer(player, casterMerchBaseAFBuff, MerchBaseSpellLine);
-							BuffPlayer(player, casterMerchStrBuff, MerchBaseSpellLine);
-							BuffPlayer(player, casterMerchDexBuff, MerchBaseSpellLine);
-							BuffPlayer(player, casterMerchConBuff, MerchBaseSpellLine);
-							BuffPlayer(player, casterMerchSpecAFBuff, MerchSpecSpellLine);
-							BuffPlayer(player, casterMerchStrConBuff, MerchSpecSpellLine);
-							BuffPlayer(player, casterMerchDexQuiBuff, MerchSpecSpellLine);
-							BuffPlayer(player, casterMerchAcuityBuff, MerchSpecSpellLine);
-							BuffPlayer(player, MerchHasteBuff, MerchSpecSpellLine);
-						}
-						else
-						{
-							BuffPlayer(player, MerchBaseAFBuff, MerchBaseSpellLine);
-							BuffPlayer(player, MerchStrBuff, MerchBaseSpellLine);
-							BuffPlayer(player, MerchDexBuff, MerchBaseSpellLine);
-							BuffPlayer(player, MerchConBuff, MerchBaseSpellLine);
-							BuffPlayer(player, MerchSpecAFBuff, MerchSpecSpellLine);
-							BuffPlayer(player, MerchStrConBuff, MerchSpecSpellLine);
-							BuffPlayer(player, MerchDexQuiBuff, MerchSpecSpellLine);
-							BuffPlayer(player, MerchAcuityBuff, MerchSpecSpellLine);
-							BuffPlayer(player, MerchHasteBuff, MerchSpecSpellLine);
-						}
-					}
-					player.Out.SendMessage("Fight well, " + player.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					break;
 				case "Gold":
 					{
 						TurnTo(player, 10000);
@@ -1022,7 +990,7 @@ namespace DOL.GS
 		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
 			GamePlayer t = source as GamePlayer;
-			
+
 			if (GetDistanceTo(t) > WorldMgr.INTERACT_DISTANCE)
 			{
 				((GamePlayer)source).Out.SendMessage("You are too far away to give anything to " + GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -1300,9 +1268,9 @@ namespace DOL.GS.Items
 		{
 			if (!ServerProperties.Properties.LOAD_BUFF_TOKENS)
 				return;
-			
+
 			ItemTemplate item;
-			
+
 			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("Full_Buffs_Token");
 			if (item == null)
 			{
@@ -1321,7 +1289,7 @@ namespace DOL.GS.Items
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + item.Id_nb);
 			}
-			
+
 			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("Specialization_Buffs_Token");
 			if (item == null)
 			{
@@ -1340,7 +1308,7 @@ namespace DOL.GS.Items
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + item.Id_nb);
 			}
-			
+
 			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("Baseline_Buffs_Token");
 			if (item == null)
 			{
@@ -1359,7 +1327,7 @@ namespace DOL.GS.Items
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + item.Id_nb);
 			}
-			
+
 			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("Strength_Buff_Token");
 			if (item == null)
 			{
@@ -1397,7 +1365,7 @@ namespace DOL.GS.Items
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + item.Id_nb);
 			}
-			
+
 			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("Dexterity_Buff_Token");
 			if (item == null)
 			{
@@ -1454,7 +1422,7 @@ namespace DOL.GS.Items
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + item.Id_nb);
 			}
-			
+
 			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("DexQui_Buff_Token");
 			if (item == null)
 			{
@@ -1473,7 +1441,7 @@ namespace DOL.GS.Items
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + item.Id_nb);
 			}
-			
+
 			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("Acu_Buff_Token");
 			if (item == null)
 			{
@@ -1492,7 +1460,7 @@ namespace DOL.GS.Items
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + item.Id_nb);
 			}
-			
+
 			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("SpecAF_Buff_Token");
 			if (item == null)
 			{
@@ -1658,7 +1626,7 @@ namespace DOL.GS.Items
 		{
 			if (!ServerProperties.Properties.LOAD_BUFF_TOKENS)
 				return;
-			
+
 			ItemTemplate item;
 
 			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPFull_Buffs_Token");
@@ -2082,4 +2050,3 @@ public class BPBuffTokensList
 	}
 }
 #endregion
-

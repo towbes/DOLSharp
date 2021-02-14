@@ -137,24 +137,33 @@ namespace DOL.GS.Scripts
         private static ItemTemplate AlbionSlashFlex = null;
         private static ItemTemplate AlbionThrustFlex = null;
 
+        
         protected static void GiveItem(GamePlayer player, ItemTemplate itemTemplate) { GiveItem(null, player, itemTemplate); }
         protected static void GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate)
         {
+            InventoryItem item = null;
+
+            ItemTemplate temp = null;
+
+            temp = GameServer.Database.FindObjectByKey<ItemTemplate>(itemTemplate.Id_nb);
+
             itemTemplate.AllowAdd = true;
-            if (GameServer.Database.SelectObject<ItemTemplate>("Id_nb = '" + itemTemplate.Id_nb + "'") == null)
+            if (temp == null)
             {
+                if (log.IsInfoEnabled) log.Info("Template not found, adding");
                 GameServer.Database.AddObject(itemTemplate);
             }
-            //ameInventoryItem.Create<ItemTemplate>(itemTemplate);
-            InventoryItem item = GameInventoryItem.Create<ItemTemplate>(itemTemplate);
-            if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
-            {
-                if (source == null) { player.Out.SendMessage("You receive the " + itemTemplate.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow); }
-                else { player.Out.SendMessage("You receive " + itemTemplate.GetName(0, false) + " from " + source.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow); }
-            }
-            else { player.CreateItemOnTheGround(item); player.Out.SendMessage("Your Inventory is full. You couldn't recieve the " + itemTemplate.Name + ",so it's been placed on the ground. Pick it up as soon as possible or it will vanish in a few minutes.", eChatType.CT_Important, eChatLoc.CL_PopupWindow); }
-        }
 
+            item = GameInventoryItem.Create(itemTemplate);
+
+            if (!player.ReceiveItem(source, item))
+            {
+                player.Out.SendMessage(String.Format("Your backpack is full, come back when it's not"), eChatType.CT_Important, eChatLoc.CL_PopupWindow);
+            }
+        }
+        
+        
+        
         [ScriptLoadedEvent]
         public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
         {
@@ -549,7 +558,7 @@ namespace DOL.GS.Scripts
 
             if (log.IsInfoEnabled) log.Info("Equipment NPC initialized");
         }
-
+        
         public override bool Interact(GamePlayer player)
         {
             if (!base.Interact(player)) return false;
